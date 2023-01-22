@@ -1,0 +1,50 @@
+{
+  "name": "email-helper",
+  "version": "0.1.0",
+  "description": "GPT for email",
+  "main": "handler.js",
+  "scripts": {
+    "test": "serverless-bundle test"
+  },
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mikesoylu/email-helper"
+  },
+  "devDependencies": {
+    "@middy/core": "^4.1.0",
+    "@middy/http-header-normalizer": "^4.1.0",
+    "@middy/http-json-body-parser": "^4.1.0",
+    "@middy/http-multipart-body-parser": "^4.1.0",
+    "@middy/http-urlencode-body-parser": "^4.1.0",
+    "@middy/http-urlencode-path-parser": "^4.1.0",
+    "@types/aws-lambda": "^8.10.109",
+    "@types/jest": "^29.2.6",
+    "@types/multiparty": "^0.0.33",
+    "@types/node": "^18.11.18",
+    "@types/showdown": "^2.0.0",
+    "@types/uuid": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.48.2",
+    "@typescript-eslint/parser": "^5.48.2",
+    "axios": "^1.2.3",
+    "dynamoose": "^3.1.0",
+    "eslint": "^8.32.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "gpt-3-encoder-browser": "mem-labs/GPT-3-Encoder",
+    "mock-req": "^0.2.0",
+    "multiparty": "^4.2.3",
+    "openai": "^3.1.0",
+    "prettier": "^2.8.3",
+    "serverless-bundle": "6.0.0",
+    "serverless-domain-manager": "^6.2.1",
+    "serverless-dotenv-plugin": "^4.0.2",
+    "serverless-dynamodb-local": "^0.2.40",
+    "serverless-frontend-plugin": "^2.0.1",
+    "serverless-offline": "^12.0.4",
+    "showdown": "^2.1.0",
+    "ts-mailgun": "^0.5.1",
+    "uuid": "^9.0.0"
+  }
+}

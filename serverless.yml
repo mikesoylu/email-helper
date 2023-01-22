@@ -1,0 +1,104 @@
+service: helper-email
+
+frameworkVersion: '3'
+
+useDotenv: true
+
+configValidationMode: warn
+
+deprecationNotificationMode: warn:summary
+
+custom:
+  # Our stage is based on what is passed in when running serverless
+  # commands. Or fallsback to what we have set in the provider section.
+  stage: ${opt:stage, self:provider.stage}
+
+  customDomain:
+    domainName: ${env:API_DOMAIN}
+    stage: ${self:custom.stage}
+    basePath: ''
+    certificateArn: ${env:AWS_ACM_CERTIFICATE_ARN}
+    createRoute53Record: true
+    endpointType: REGIONAL
+    securityPolicy: tls_1_2
+    apiType: http
+    autoDomain: true
+
+  serverless-frontend-plugin:
+    distDir: public
+    stackName: helper-email-${self:custom.stage}-${self:provider.region}
+    distribution:
+      acmCertificateArn: ${env:AWS_ACM_CERTIFICATE_ARN}
+      dnsName: ${env:APP_DOMAIN}
+      hostedZoneName: ${env:HOSTED_ZONE_NAME}
+    offline:
+      command:
+        - npx
+        - http-server
+        - "-p"
+        - 4321
+
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+
+# Create an optimized package for our functions 
+package:
+  individually: true
+
+plugins:
+  - serverless-bundle
+  - serverless-dynamodb-local
+  - serverless-domain-manager
+  - serverless-offline
+  - serverless-frontend-plugin
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: us-east-1
+  timeout: 30
+  memorySize: 512
+
+  logs:
+    restApi: true
+
+  environment:
+    usersTableName: helper-email-${self:custom.stage}-users
+    MAILGUN_KEY: ${env:MAILGUN_KEY}
+    MAILGUN_SIGN_KEY: ${env:MAILGUN_SIGN_KEY}
+    MAILGUN_DOMAIN: ${env:MAILGUN_DOMAIN}
+    MAILGUN_EMAIL: ${env:MAILGUN_EMAIL}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:CreateTable
+            - dynamodb:UpdateTable
+          Resource: '*'
+
+functions:
+  incoming:
+    handler: handler.incoming
+    events:
+      - httpApi:
+          path: /incoming
+          method: post

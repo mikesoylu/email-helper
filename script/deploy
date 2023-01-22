@@ -1,0 +1,3 @@
+#!/bin/bash
+
+serverless deploy --stage production

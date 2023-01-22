@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Load environment variables from .env file
+source .env
+
+serverless offline start &
+lt -p 3000 -s $LOCALTUNNEL_SUBDOMAIN &
+wait
